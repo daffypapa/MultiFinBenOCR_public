@@ -89,7 +89,7 @@ def plot_violin(df_eval, output_prefix="llm_eval",language = 'en'):
     
 
 
-def run_eval_and_plot(parquet_path, pred_dir, model_name="gpt-4o", language = 'en' output_csv=None):
+def run_eval_and_plot(parquet_path, pred_dir, model_name="gpt-4o", language = 'en', output_csv=None):
     df = pd.read_parquet(parquet_path)
 
     pred_indexes = []
