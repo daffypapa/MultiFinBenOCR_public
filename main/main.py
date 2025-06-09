@@ -13,7 +13,7 @@ def evaluate(model_name="gpt-4o", experiment_tag="zero-shot",language = "en", sa
     elif language == "es":
         df = pd.read_parquet("hyr_ocr_process/spanish_output_parquet/spanish_batch_0000.parquet")
     elif language == "el":
-        df = pd.read_parquet("hyr_ocr_process/greek_output_parquet/greek_batch_0000.parquet")
+        df = pd.read_parquet("hyr_ocr_process/greek_output_parquet/random_greek_fitz_batch.parquet")
     
     else: 
         print("Not a valid choice of language, please try again.")
@@ -36,12 +36,15 @@ def evaluate(model_name="gpt-4o", experiment_tag="zero-shot",language = "en", sa
     agent = Agent(model_name)
 
     for i, row in tqdm(df.iterrows(), total=len(df), desc=f"Running {model_name}"):
-        image_path = row["image_path"]
+        #image_path = row["image_path"]
+        raw_path = row["image_path"].replace("\\", "/")
+        image_filename = os.path.basename(raw_path)
+        image_path = os.path.join("/content/MultiFinBenOCR_public/images_fitz_sample", image_filename)
         ground_truth = row["matched_html"]
         output_file = os.path.join(experiment_folder, f"{model_name}_pred_{i}.txt")
 
         try:
-            result = agent.draft(image_path, by_line=False)
+            result = agent.draft(image_path)
             with open(output_file, "w", encoding="utf-8") as f:
                 f.write(result)
             time.sleep(1.5)
