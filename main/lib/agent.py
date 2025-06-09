@@ -35,7 +35,8 @@ class Agent:
         image = Image.open(image_path).convert("RGB")
 
         
-        prompt = "Convert this financial statement page into semantically correct HTML. Return html and nothing else. Use plain html only, no styling please."
+        #prompt = "Convert this financial statement page into semantically correct HTML. Return html and nothing else. Use plain html only, no styling please."
+        prompt = "Extract all the text from this image. Return only the text, without formatting or explanations please."
 
         if "llava" in self.model_name:
             conversation = [
