@@ -12,6 +12,9 @@ def evaluate(model_name="gpt-4o", experiment_tag="zero-shot",language = "en", sa
         df = pd.read_parquet("hyr_ocr_process/output_parquet_hyr/EnglishOCR.parquet")
     elif language == "es":
         df = pd.read_parquet("hyr_ocr_process/spanish_output_parquet/spanish_batch_0000.parquet")
+    elif language == "el":
+        df = pd.read_parquet("hyr_ocr_process/greek_output_parquet/greek_batch_0000.parquet")
+    
     else: 
         print("Not a valid choice of language, please try again.")
         return language
@@ -25,6 +28,8 @@ def evaluate(model_name="gpt-4o", experiment_tag="zero-shot",language = "en", sa
         experiment_folder = os.path.join("hyr_results/predictions/", experiment_name)
     elif language == "es":
         experiment_folder = os.path.join("hyr_results/predictions_spanish/", experiment_name)
+    elif language == "el":
+        experiment_folder = os.path.join("hyr_results/predictions_greek/", experiment_name)
 
     os.makedirs(experiment_folder, exist_ok=True)
 
@@ -46,7 +51,7 @@ def evaluate(model_name="gpt-4o", experiment_tag="zero-shot",language = "en", sa
 
 def main():
     # Change this to "blip" or "llava" to control model
-    evaluate(model_name="gpt-4o",language = "en", sample = 20)
+    evaluate(model_name="gpt-4o",language = "el", sample = 20)
 
 if __name__ == '__main__':
     main()
