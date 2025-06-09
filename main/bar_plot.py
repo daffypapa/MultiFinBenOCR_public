@@ -31,6 +31,9 @@ def evaluate_predictions_to_dataframe(pred_dir, ground_truths, model_name="gpt-4
                 P, R, F1 = bert_score([pred], [gt], lang="en", rescale_with_baseline=False)
             elif language == 'es':
                 P, R, F1 = bert_score([pred], [gt], lang="es", rescale_with_baseline=False)
+            elif language == 'el':
+                P, R, F1 = bert_score([pred], [gt], lang="el", rescale_with_baseline=False)
+            
             else:
                 print('Not a valid language, please try again')
                 return language
@@ -82,6 +85,19 @@ def plot_violin(df_eval, output_prefix="llm_eval",language = 'en'):
             plt.savefig(f"hyr_results/eval_plots_spanish/{output_prefix}_{metric.lower()}_violin.png", dpi=300)
             plt.close()
             print(f"✅ Saved: {metric} violin plot → hyr_results/eval_plots_spanish/{output_prefix}_{metric.lower()}_violin.png")
+    elif language == 'el':
+        os.makedirs("hyr_results/eval_plots_greek", exist_ok=True)
+        for metric in ["BLEU", "BERTScore_F1"]:
+            plt.figure(figsize=(10, 5))
+            sns.violinplot(x="Model", y=metric, data=df_eval, palette="Set2", cut=0)
+            plt.title(f"{metric} Score Distribution")
+            plt.grid(True)
+            plt.tight_layout()
+            plt.savefig(f"hyr_results/eval_plots_greek/{output_prefix}_{metric.lower()}_violin.png", dpi=300)
+            plt.close()
+            print(f"✅ Saved: {metric} violin plot → hyr_results/eval_plots_greek/{output_prefix}_{metric.lower()}_violin.png")
+
+    
     else:
             print('Not a valid language, please try again')
             return language
@@ -89,7 +105,7 @@ def plot_violin(df_eval, output_prefix="llm_eval",language = 'en'):
     
 
 
-def run_eval_and_plot(parquet_path, pred_dir, model_name="gpt-4o", language = 'en', output_csv=None):
+def run_eval_and_plot(parquet_path, pred_dir, model_name="gpt-4o", language = 'el', output_csv=None):
     df = pd.read_parquet(parquet_path)
 
     pred_indexes = []
@@ -106,7 +122,8 @@ def run_eval_and_plot(parquet_path, pred_dir, model_name="gpt-4o", language = 'e
 
     df_eval = evaluate_predictions_to_dataframe(pred_dir, df["matched_html"], model_name=model_name,language = language)
     if output_csv:
-        df_eval.to_csv(output_csv, index=False)
+        #df_eval.to_csv(output_csv, index=False)
+        df_eval.to_csv(output_csv, index=False, encoding="utf-8-sig")
         print(f"✅ Evaluation saved to CSV: {output_csv}")
 
     plot_violin(df_eval, output_prefix=model_name, language = language)
@@ -116,10 +133,10 @@ def run_eval_and_plot(parquet_path, pred_dir, model_name="gpt-4o", language = 'e
 
 def main():
     run_eval_and_plot(
-        parquet_path="hyr_ocr_process/spanish_output_parquet/spanish_batch_0000.parquet",
-        pred_dir="hyr_results/predictions_spanish/gpt-4o_zero-shot_financial",
+        parquet_path="hyr_ocr_process/greek_output_parquet/random_greek_fitz_batch.parquet",
+        pred_dir="hyr_results/predictions_greek/gpt-4o_zero-shot_financial",
         model_name="gpt-4o",
-        output_csv="hyr_results/eval_spanish_gpt_4o.csv"
+        output_csv="hyr_results/eval_greek_gpt_4o_fitz.csv"
     )
 
 if __name__ == '__main__':
