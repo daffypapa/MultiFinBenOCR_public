@@ -51,7 +51,7 @@ def evaluate(model_name="gpt-4o", experiment_tag="zero-shot",language = "en", sa
 
 def main():
     # Change this to "blip" or "llava" to control model
-    evaluate(model_name="gpt-4o",language = "el", sample = 20)
+    evaluate(model_name="gpt-4o",language = "el", sample = 10)
 
 if __name__ == '__main__':
     main()
